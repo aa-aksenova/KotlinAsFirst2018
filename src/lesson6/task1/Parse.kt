@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
 package lesson6.task1
+import lesson2.task2.daysInMonth
 
 /**
  * Пример
@@ -71,7 +72,30 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val a = str.split(" ")
+    if (a.size != 3) return ""
+    val b = a[0].toIntOrNull()
+    val c = a[2].toIntOrNull()
+    if ((b == null) || (c == null)) return ""
+    val d = when (a[1]) {
+        "января" -> 1
+        "февраля" -> 2
+        "марта" -> 3
+        "апреля" -> 4
+        "мая" -> 5
+        "июня" -> 6
+        "июля" -> 7
+        "августа" -> 8
+        "сентября" -> 9
+        "октября" -> 10
+        "ноября" -> 11
+        "декабря" -> 12
+        else -> return ""
+    }
+    return if (daysInMonth(d, c) < b) ""
+    else String.format("%02d.%02d.%d", b, d, c)
+}
 
 /**
  * Средняя
@@ -83,7 +107,32 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val a = digital.split('.')
+    try {
+        val b = if (a.size == 3) when (a[1].toInt()) {
+            1 -> "января"
+            2 -> "февраля"
+            3 -> "марта"
+            4 -> "апреля"
+            5 -> "мая"
+            6 -> "июня"
+            7 -> "июля"
+            8 -> "августа"
+            9 -> "сентября"
+            10 -> "октября"
+            11 -> "ноября"
+            12 -> "декабря"
+            else -> ""
+        } else ""
+        if (b.isEmpty()) return ""
+        val c = daysInMonth(a[1].toInt(), a[2].toInt())
+        return if (a[0].toInt() <= c)
+            String.format("%d %s %d", a[0].toInt(), b, a[2].toInt()) else ""
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -97,7 +146,17 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var a = ""
+    val b = listOf(' ', '-', '(', ')')
+    for (c in phone)
+        when (c) {
+            in '0'..'9' -> a += c.toString()
+            '+' -> a += "+"
+            !in b -> return ""
+        }
+    return if (a != "+") a else ""
+}
 
 /**
  * Средняя
@@ -109,7 +168,18 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    var a = -1
+    var b = jumps.split(" ", "-", "%")
+    if (b == listOf("")) return -1
+    b = b.filter { it != "" }
+    try {
+        for (part in b) if (part.toInt() > a) a = part.toInt()
+    } catch (e: NumberFormatException) {
+        return -1
+    }
+    return a
+}
 
 /**
  * Сложная
@@ -121,7 +191,10 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val a = Regex("""\d+(?= [%+-]*\+)""").findAll(jumps)
+    return a.asSequence().map { it.value.toInt() }.max() ?: -1
+}
 
 /**
  * Сложная
@@ -143,7 +216,13 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val a = str.toLowerCase().trim().split(" ")
+    var b = 0
+    for (i in 0 until a.size - 1)
+        if (a[i] == a[i + 1]) return b else b += a[i].length + 1
+    return -1
+}
 
 /**
  * Сложная
@@ -156,7 +235,20 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val a = description.split("; ", " ")
+    var b = 1
+    return try {
+        for (part in 1 until a.size step 2) {
+            if (a[part].toDouble() > a[b].toDouble()) {
+                b = part
+            }
+        }
+        a[b - 1]
+    } catch (e: NumberFormatException) {
+        ""
+    }
+}
 
 /**
  * Сложная
@@ -169,7 +261,23 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    val a = listOf("M", "D", "C", "L", "X", "V", "I")
+    val b = listOf(1000, 500, 100, 50, 10, 5, 1)
+    val c = mutableListOf<Int>()
+    var d = 0
+    if (roman == "") return -1
+    for (i in roman) {
+        if (i.toString() in a) c.add(b[a.indexOf(i.toString())])
+        else return -1
+    }
+    for (i in 0 until roman.length - 1) {
+        if (c[i] < c[i + 1]) d -= c[i]
+        else d += c[i]
+    }
+    d += c[c.size - 1]
+    return d
+}
 
 /**
  * Очень сложная
