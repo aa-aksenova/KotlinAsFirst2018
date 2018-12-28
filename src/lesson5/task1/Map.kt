@@ -1,4 +1,4 @@
-  @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
 package lesson5.task1
 
@@ -117,7 +117,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val a = mutableMapOf<Int, List<String>>()
     for ((name, grade) in grades) {
-        a[grade] = (a.getOrPut(grade, ::mutableListOf) + listOf(name)).sortedDescending()
+        a[grade] = (a.getOrPut(grade, ::mutableListOf) + mutableListOf(name))
     }
     return a
 }
@@ -226,7 +226,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean =
-        word.all { chars.joinToString().toLowerCase().toSet().contains(it.toLowerCase()) }
+        word.all { chars.toString().toLowerCase().toSet().contains(it.toLowerCase()) }
 
 /**
  * Средняя
