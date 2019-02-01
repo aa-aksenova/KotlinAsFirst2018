@@ -59,17 +59,15 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     for (str in substrings) {
         var b = 0
         for (line in File(inputName).readLines()) {
-            b += Regex(str.toLowerCase()).findAll(line.toLowerCase()).count()
+            b += Regex("(?=($str))", RegexOption.IGNORE_CASE).findAll(line).count()
         }
         a[str] = b
     }
     return a
 }
 
-
 /**
  * Средняя
- *
  * В русском языке, как правило, после букв Ж, Ч, Ш, Щ пишется И, А, У, а не Ы, Я, Ю.
  * Во входном файле с именем inputName содержится некоторый текст на русском языке.
  * Проверить текст во входном файле на соблюдение данного правила и вывести в выходной
